@@ -1,17 +1,26 @@
 # 365 Bites — Restaurant Website
 
 A single-page, no-build website for **365 Bites**, Kolkata.
-Everything is plain HTML, CSS and JavaScript — open `index.html` in a browser,
-or upload the folder to any host. No frameworks, no npm, no server needed.
+
+**`index.html` is the entire website — one self-contained file.** The logo,
+the hero photograph and the tab icon are embedded inside it, so it renders
+correctly on its own: email it, send it over WhatsApp, open it from a USB
+stick, or upload just that one file to any host. There is nothing else it
+needs. No frameworks, no npm, no build step, no server.
 
 ```
-index.html          the entire site (markup, styles, script, menu data)
-assets/logo.png     logo, transparent — for light backgrounds
-assets/logo-light.png  logo recoloured for dark backgrounds (used in the footer)
-assets/hero-food.jpg   hero photograph
-assets/icon.png        browser tab / home-screen icon
+index.html          the whole site — markup, styles, script, menu data, images
+assets/             the source images, kept here so they stay editable
+  logo.png            logo, transparent — for light backgrounds
+  logo-light.png      logo recoloured for dark backgrounds (used in the footer)
+  hero-food.jpg       hero photograph
+  icon.png            browser tab / home-screen icon
 365 bites menue card 12 pages - Copy.pdf   the source menu card
 ```
+
+The files in `assets/` are **not** loaded by the page — they're the originals
+to edit if you ever want to change an image. After editing one, re-embed it
+(see *Replacing an image* below).
 
 The brand colours, logo, hero photo and all menu items were taken from the
 printed menu card PDF in this repo. Brand palette: maroon `#501316`,
@@ -94,7 +103,22 @@ address, phone numbers and cuisines.
 **GitHub Pages** — push the repo, then Settings → Pages → select the branch and
 `/ (root)`. The site goes live at `https://<user>.github.io/<repo>/`.
 
-**Any other host** — upload `index.html` and the `assets/` folder.
+**Any other host** — upload `index.html`. That single file is the whole site.
+
+## Replacing an image
+
+Because the images are embedded, swapping one is a two-step job. Put the new
+image in `assets/` under the same name, then convert it to a data URI and
+paste it over the old one in `index.html`:
+
+```bash
+# prints  data:image/png;base64,iVBOR...
+python3 -c "import base64;print('data:image/png;base64,'+base64.b64encode(open('assets/logo.png','rb').read()).decode())"
+```
+
+In `index.html`, find the `src="data:image/png;base64,..."` you want to
+replace and swap in the new string. Keep images small — under about 150KB
+each — so the page stays quick to load.
 
 ## Possible next steps
 
