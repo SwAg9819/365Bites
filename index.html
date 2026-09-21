@@ -488,7 +488,8 @@ button{cursor:pointer;border:0;background:none}
 
 /* print a clean menu sheet */
 @media print{
-  .nav,.fab,.hero,.cta,.menu-tools,.occasions,.contact,.footer,.hero-actions{display:none !important}
+  .nav,.fab,.hero,.cta,.menu-tools,.occasions,.contact,.footer,.hero-actions,
+  .gallery{display:none !important}
   body{background:#fff;font-size:11pt}
   .menu{border:0}
   .dish-grid{grid-template-columns:1fr 1fr;gap:0 28px}
@@ -1142,7 +1143,11 @@ const GALLERY = [
   { img:"assets/dishes/mixed-schezwan-fried-rice.jpg", name:"Mixed Schezwan Fried Rice", find:"Mixed Schezwan Fried Rice" },
   { img:"assets/dishes/mixed-fried-rice.jpg",          name:"Mixed Fried Rice",          find:"Mixed Fried Rice" },
   { img:"assets/dishes/chicken-biryani.jpg",           name:"Chicken Biryani",           find:"Chicken Biryani with Egg" },
-  { img:"assets/dishes/egg-biryani.jpg",               name:"Egg Biryani",               find:"Egg Biryani" }
+  { img:"assets/dishes/egg-biryani.jpg",               name:"Egg Biryani",               find:"Egg Biryani" },
+  { img:"assets/dishes/special-chicken-biryani.jpg",   name:"Special Chicken Biryani",   find:"Special Chicken Biryani with Egg" },
+  { img:"assets/dishes/chicken-kasha.jpg",             name:"Chicken Kasha",             find:"Chicken Kasha - 4 Pcs" },
+  { img:"assets/dishes/pulao-mutton-kasha.jpg",        name:"Basanti Pulao &amp; Mutton Kasha", find:"Basanti Pulao + 2 Pcs Mutton Kasha" },
+  { img:"assets/dishes/rumali-roti-veg-tadka.jpg",     name:"Rumali Roti &amp; Veg Tadka",      find:"Rumali Roti (2 Pcs) + Veg Tadka" }
 ];
 /* ======================  END OF EDITABLE PHOTOS  ========================== */
 
@@ -1191,6 +1196,7 @@ const GALLERY = [
   function render(){
     const raw = searchEl ? searchEl.value.trim() : "";
     const q = norm(raw);
+    const toks = q ? q.split(" ").filter(Boolean) : [];
     clearEl.classList.toggle("show", raw.length > 0);
 
     // when searching, look across every group; otherwise honour the active tab
@@ -1198,8 +1204,11 @@ const GALLERY = [
 
     const sections = [];
     groups.forEach(g => g.sections.forEach(s => {
-      const items = q
-        ? s.items.filter(i => norm(i.n).includes(q) || (i.d && norm(i.d).includes(q)))
+      const items = toks.length
+        ? s.items.filter(i => {
+            const hay = norm(i.n) + " " + (i.d ? norm(i.d) : "");
+            return toks.every(t => hay.includes(t));   // every word must appear,
+          })                                           // but not necessarily together
         : s.items;
       if (items.length) sections.push({ title:s.title, items });
     }));
@@ -1278,8 +1287,14 @@ const GALLERY = [
         ${price !== null ? `<span class="dc-price">₹${price}</span>` : ""}
       </div>`;
 
-    // a photo with no file behind it hides its card instead of showing a broken image
-    card.querySelector("img").addEventListener("error", () => card.classList.add("missing"));
+    // a photo with no file behind it hides its card instead of showing a broken
+    // image; if none of them load at all, the section hides itself rather than
+    // leaving a heading over an empty space
+    card.querySelector("img").addEventListener("error", () => {
+      card.classList.add("missing");
+      if (grid.querySelectorAll(".dish-card.missing").length === GALLERY.length)
+        document.getElementById("dishes").style.display = "none";
+    });
 
     // tapping a dish searches the menu for it
     if (d.find){
