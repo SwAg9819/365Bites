@@ -15,12 +15,38 @@ assets/             the source images, kept here so they stay editable
   logo-light.png      logo recoloured for dark backgrounds (used in the footer)
   hero-food.jpg       hero photograph
   icon.png            browser tab / home-screen icon
+assets/dishes/      the dish photographs — THESE ARE LOADED BY THE PAGE
 365 bites menue card 12 pages - Copy.pdf   the source menu card
 ```
 
-The files in `assets/` are **not** loaded by the page — they're the originals
-to edit if you ever want to change an image. After editing one, re-embed it
-(see *Replacing an image* below).
+`assets/logo.png`, `logo-light.png`, `hero-food.jpg` and `icon.png` are **not**
+loaded by the page — they're the originals to edit if you want to change one.
+After editing, re-embed it (see *Replacing an image* below).
+
+**`assets/dishes/` is different — the page does load those files.** The dish
+photographs stay external on purpose: there are twenty of them, and embedding
+them would add over a megabyte to the page and force every one to download
+before anything appeared on screen. As separate files they load lazily, so a
+visitor only downloads the photos they actually scroll to.
+
+So when you publish, upload `index.html` **and** the `assets/dishes/` folder.
+If the folder is missing the site still works perfectly — the photo cards
+simply hide themselves and everything else is unaffected.
+
+## Adding a dish photo
+
+1. Put the photo in `assets/dishes/`. Square-ish crops look best; keep each
+   file under about 80KB.
+2. In `index.html`, find the block marked **DISH PHOTOS** and add a line:
+
+   ```js
+   { img:"assets/dishes/mutton-biryani.jpg", name:"Mutton Biryani",
+     find:"Mutton Biriyani with Egg" }
+   ```
+
+   `find` must match a dish name in the menu exactly — the price is then read
+   from the menu automatically, so prices never have to be typed twice. Omit
+   `find` and the card shows the photo and caption with no price.
 
 The brand colours, logo, hero photo and all menu items were taken from the
 printed menu card PDF in this repo. Brand palette: maroon `#501316`,
