@@ -11,7 +11,7 @@ needs. No frameworks, no npm, no build step, no server.
 ```
 index.html          the whole site — markup, styles, script, menu data, images
 assets/             the source images, kept here so they stay editable
-  logo.png            logo, transparent — for light backgrounds
+  logo.png            logo, transparent — used in the nav bar
   logo-light.png      logo recoloured for dark backgrounds (used in the footer)
   hero-food.jpg       hero photograph
   icon.png            browser tab / home-screen icon
@@ -151,3 +151,14 @@ each — so the page stays quick to load.
 - Add opening hours to the contact section and to the structured data.
 - Add photographs of your own dishes to the menu sections.
 - Register a domain and point it at GitHub Pages.
+
+## The About-section collage
+
+The About section shows a staggered collage of four dishes with a "365 days a
+year" badge over it. The four are chosen in the markup — search `index.html`
+for `class="collage"` and swap the filenames for any others in
+`assets/dishes/`. Pick photos with dark or neutral backgrounds; they sit
+better against the cream page than the bright turquoise ones.
+
+Like the gallery, the collage hides itself if the photos aren't deployed, and
+the About section falls back to a single column of text.
